@@ -2,14 +2,7 @@
 
 A systemd service that monitors a directory for new text files from CoCo DriveWire, automatically prints them via CUPS, and archives them with timestamps.
 
-## Features
-
-- **Directory Monitoring**: Uses `inotifywait` to efficiently monitor for new `.txt` files
-- **Timestamp Renaming**: Renames files with format `filename_YYYYMMDDHHMMSS.txt`
-- **CUPS Integration**: Prints files using the `lp` command to specified printer
-- **Automatic Archiving**: Moves processed files to an `archive/` subdirectory
-- **Comprehensive Logging**: Configurable log levels (DEBUG, INFO, WARN, ERROR)
-- **Systemd Integration**: Runs as a proper systemd service with security hardening
+**Note:** Throughout this documentation, we use `/cocoprints` as the example monitoring directory. This path is fully configurable via the `MONITOR_DIR` setting in the configuration file.
 
 ## Installation
 
@@ -29,7 +22,7 @@ sudo yum install inotify-tools cups-client
 ### 2. Create Service User
 
 ```bash
-sudo useradd --system --shell /bin/false --home-dir /nonexistent drivewire
+sudo useradd --system --no-create-home drivewire
 ```
 
 **Note:** The service runs as user `drivewire` with group `drivewire` by default. You may want to customize this by editing the `User=` and `Group=` lines in `coco-print-service.service`
@@ -58,7 +51,7 @@ sudo mkdir -p /cocoprints/archive
 
 # Set appropriate permissions
 sudo chown -R drivewire:drivewire /cocoprints
-sudo chmod -R 755 /cocoprints
+sudo chmod -R 2755 /cocoprints
 ```
 
 **Note:** If you change `MONITOR_DIR` in the configuration, make sure to create that directory and its `archive` subdirectory with appropriate permissions.
@@ -94,27 +87,7 @@ sudo systemctl status coco-print-service
 
 ## Configuration
 
-The service is configured via `/etc/coco-print-service.conf`:
-
-```bash
-# Directory to monitor for new print files
-MONITOR_DIR="/cocoprints"
-
-# CUPS printer name to use for printing
-PRINTER_NAME="default"
-
-# Log level: DEBUG, INFO, WARN, ERROR
-LOG_LEVEL="INFO"
-
-# File patterns to watch (space-separated)
-WATCH_PATTERNS="*.txt"
-
-# Archive subdirectory name (relative to MONITOR_DIR)
-ARCHIVE_DIR="archive"
-
-# Log file name (relative to MONITOR_DIR)
-LOG_FILE="coco-print.log"
-```
+The service is configured via `/etc/coco-print-service.conf`.
 
 ## Usage
 
@@ -164,18 +137,6 @@ sudo journalctl -u coco-print-service --since "1 hour ago"
 2. **Rename**: File is renamed with timestamp (e.g., `printjob.txt` → `printjob_20241019143022.txt`)
 3. **Print**: File is sent to CUPS printer using `lp` command
 4. **Archive**: File is moved to `archive/` subdirectory
-5. **Log**: All activities are logged with timestamps
-
-## Security Features
-
-The systemd service includes several security hardening features:
-
-- Runs as dedicated `coco-print` user
-- Limited filesystem access (only write access to monitor directory)
-- No new privileges allowed
-- Private temporary directory
-- Protected system directories
-- Restricted capabilities
 
 ## Troubleshooting
 
