@@ -58,11 +58,7 @@ sudo chmod -R 2755 /cocoprints
 
 ### 5. Configure the Service
 
-Edit the configuration file:
-
-```bash
-sudo nano /etc/coco-print-service.conf
-```
+Edit the configuration file: `/etc/coco-print-service.conf`
 
 Key settings:
 - `MONITOR_DIR`: Directory to monitor (default: `/cocoprints`)
@@ -84,10 +80,6 @@ sudo systemctl start coco-print-service
 # Check status
 sudo systemctl status coco-print-service
 ```
-
-## Configuration
-
-The service is configured via `/etc/coco-print-service.conf`.
 
 ## Usage
 
@@ -147,23 +139,18 @@ sudo journalctl -u coco-print-service --since "1 hour ago"
    sudo systemctl status coco-print-service
    ```
 
-2. **Verify directories exist:**
-   ```bash
-   ls -la /cocoprints
-   ls -la /cocoprints/archive
-   ```
-   If directories don't exist, create them as shown in installation step 4.
-
-3. Check dependencies:
+2. Check dependencies:
    ```bash
    which inotifywait
+   which lpstat
    which lp
    ```
 
-4. Verify permissions:
+3. Verify directories exist and check permissions:
    ```bash
-   ls -la /cocoprints
+   ls -ld /cocoprints /cocoprints/archive
    ```
+   If directories don't exist, create them as shown in installation step 4.
 
 ### Files Not Being Processed
 
@@ -183,14 +170,14 @@ sudo journalctl -u coco-print-service --since "1 hour ago"
    lpstat -p
    ```
 
-2. Test manual printing:
-   ```bash
-   echo "test" | lp -d your-printer-name
-   ```
-
-3. Check CUPS service:
+2. Check CUPS service:
    ```bash
    sudo systemctl status cups
+   ```
+
+3. Test manual printing:
+   ```bash
+   echo "test" | lp -d your-printer-name
    ```
 
 ### Log File Issues
