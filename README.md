@@ -32,9 +32,7 @@ sudo yum install inotify-tools cups-client
 sudo useradd --system --shell /bin/false --home-dir /nonexistent drivewire
 ```
 
-**Note:** The service runs as user `drivewire` with group `drivewire` by default. You may want to customize this:
-- To use the `lp` group for better printer access: `sudo usermod -a -G lp drivewire`
-- To change the user/group, edit the `User=` and `Group=` lines in `coco-print-service.service`
+**Note:** The service runs as user `drivewire` with group `drivewire` by default. You may want to customize this by editing the `User=` and `Group=` lines in `coco-print-service.service`
 
 ### 3. Install Files
 
