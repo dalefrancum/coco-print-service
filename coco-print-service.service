@@ -1,0 +1,25 @@
+[Unit]
+Description=CoCo Print Service
+After=network.target cups.service
+Wants=cups.service
+
+[Service]
+Type=simple
+User=drivewire
+Group=drivewire
+ExecStart=/usr/local/bin/coco-print-service.sh
+Environment=CONFIG_FILE=/etc/coco-print-service.conf
+Restart=always
+RestartSec=5
+StandardOutput=journal
+StandardError=journal
+SyslogIdentifier=coco-print-service
+
+# Basic security settings
+NoNewPrivileges=true
+ProtectSystem=strict
+ProtectHome=true
+ReadWritePaths=/cocoprints
+
+[Install]
+WantedBy=multi-user.target

@@ -1,0 +1,46 @@
+# Logs
+*.log
+coco-print.log
+
+# Temporary files
+*.tmp
+*.temp
+*~
+.#*
+
+# Archive directories (if testing locally)
+archive/
+
+# Backup files
+*.bak
+*.backup
+
+# OS generated files
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+
+# IDE/Editor files
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# Test files
+test*.txt
+sample*.txt
+
+# Distribution files
+*.deb
+*.rpm
+*.tar.gz
+*.zip
+
+# Local configuration overrides
+local.conf
+dev.conf
