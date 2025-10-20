@@ -1,6 +1,6 @@
 # CoCo Print Service
 
-A systemd service that monitors a directory for new text files from CoCo DriveWire, automatically prints them via CUPS, and archives them with timestamps.
+Monitors a directory for new text files from CoCo DriveWire and automatically prints them via CUPS.
 
 **Note:** Throughout this documentation, `/cocoprints` is used as the example monitoring directory. However this path is fully configurable via the `MONITOR_DIR` setting in the configuration file.
 
