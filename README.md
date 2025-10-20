@@ -2,7 +2,7 @@
 
 A systemd service that monitors a directory for new text files from CoCo DriveWire, automatically prints them via CUPS, and archives them with timestamps.
 
-**Note:** Throughout this documentation, we use `/cocoprints` as the example monitoring directory. This path is fully configurable via the `MONITOR_DIR` setting in the configuration file.
+**Note:** Throughout this documentation, `/cocoprints` is used as the example monitoring directory. However this path is fully configurable via the `MONITOR_DIR` setting in the configuration file.
 
 ## Installation
 
