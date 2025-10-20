@@ -150,7 +150,7 @@ sudo journalctl -u coco-print-service --since "1 hour ago"
    ```bash
    ls -ld /cocoprints /cocoprints/archive
    ```
-   If directories don't exist, create them as shown in installation step 4.
+   If directories don't exist, create them as shown in Installation step 4.
 
 ### Files Not Being Processed
 
