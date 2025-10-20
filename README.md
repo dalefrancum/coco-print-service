@@ -5,7 +5,7 @@ A systemd service that monitors a directory for new text files from CoCo DriveWi
 ## Features
 
 - **Directory Monitoring**: Uses `inotifywait` to efficiently monitor for new `.txt` files
-- **Timestamp Renaming**: Renames files with format `YYYYMMDDHHMMSS.txt`
+- **Timestamp Renaming**: Renames files with format `filename_YYYYMMDDHHMMSS.txt`
 - **CUPS Integration**: Prints files using the `lp` command to specified printer
 - **Automatic Archiving**: Moves processed files to an `archive/` subdirectory
 - **Comprehensive Logging**: Configurable log levels (DEBUG, INFO, WARN, ERROR)
@@ -161,7 +161,7 @@ sudo journalctl -u coco-print-service --since "1 hour ago"
 ## File Processing Flow
 
 1. **Detection**: Service detects new `.txt` file in monitored directory
-2. **Rename**: File is renamed with timestamp (e.g., `20241019143022.txt`)
+2. **Rename**: File is renamed with timestamp (e.g., `printjob.txt` → `printjob_20241019143022.txt`)
 3. **Print**: File is sent to CUPS printer using `lp` command
 4. **Archive**: File is moved to `archive/` subdirectory
 5. **Log**: All activities are logged with timestamps

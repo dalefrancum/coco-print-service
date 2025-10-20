@@ -56,7 +56,8 @@ process_file() {
     local filename=$(basename "$filepath")
     local timestamp=$(get_timestamp)
     local extension="${filename##*.}"
-    local new_filename="${timestamp}.${extension}"
+    local basename="${filename%.*}"
+    local new_filename="${basename}_${timestamp}.${extension}"
     local new_filepath="$MONITOR_DIR/$new_filename"
     local archive_filepath="$ARCHIVE_PATH/$new_filename"
 
