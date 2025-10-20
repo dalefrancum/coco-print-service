@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 
 # CoCo Print Service
 # Monitors a directory for new files and prints them to a CUPS printer.
@@ -25,7 +25,6 @@ LOG_FILE="${LOG_FILE:-coco-print.log}"
 ARCHIVE_PATH="$MONITOR_DIR/$ARCHIVE_DIR"
 LOG_PATH="$MONITOR_DIR/$LOG_FILE"
 
-# Logging function
 log() {
     local level="$1"
     local message="$2"
@@ -45,12 +44,10 @@ log() {
     fi
 }
 
-# Function to get timestamp for filename
 get_timestamp() {
     date '+%Y%m%d%H%M%S'
 }
 
-# Function to process a new file
 process_file() {
     local filepath="$1"
     local filename=$(basename "$filepath")
@@ -93,7 +90,6 @@ process_file() {
     log "INFO" "Completed processing of $new_filename"
 }
 
-# Function to check dependencies
 check_dependencies() {
     local deps=("inotifywait" "lp")
     local missing=()
@@ -111,7 +107,6 @@ check_dependencies() {
     fi
 }
 
-# Function to validate printer
 validate_printer() {
     if ! lpstat -p "$PRINTER_NAME" >/dev/null 2>&1; then
         log "WARN" "Printer '$PRINTER_NAME' may not be available"
@@ -124,7 +119,6 @@ validate_printer() {
     fi
 }
 
-# Signal handlers for graceful shutdown
 cleanup() {
     log "INFO" "Received shutdown signal, cleaning up..."
     if [[ -n "${INOTIFY_PID:-}" ]]; then
@@ -136,7 +130,6 @@ cleanup() {
 
 trap cleanup SIGTERM SIGINT
 
-# Main function
 main() {
     log "INFO" "Starting CoCo Print Service"
     log "INFO" "Monitor directory: $MONITOR_DIR"
@@ -144,10 +137,7 @@ main() {
     log "INFO" "Log level: $LOG_LEVEL"
     log "INFO" "Watch pattern: $WATCH_PATTERN"
 
-    # Check dependencies
     check_dependencies
-
-    # Validate printer
     validate_printer
 
     # Exclude log file and archive directory
@@ -158,7 +148,6 @@ main() {
     log "DEBUG" "Include pattern: $WATCH_PATTERN"
     log "DEBUG" "Exclude pattern: $exclude_pattern"
 
-    # Use inotifywait to monitor for new files
     inotifywait -m -e close_write,moved_to \
         --format '%w%f' \
         --include "$WATCH_PATTERN" \
@@ -179,5 +168,4 @@ main() {
     wait $INOTIFY_PID
 }
 
-# Run main function
 main "$@"
