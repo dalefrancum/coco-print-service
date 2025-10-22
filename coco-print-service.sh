@@ -80,10 +80,16 @@ process_file() {
     fi
 
     # Move to archive
-    if mv "$new_filepath" "$archive_filepath"; then
+    log "DEBUG" "Attempting to archive $new_filepath to $archive_filepath"
+    if mv "$new_filepath" "$archive_filepath" 2>&1; then
         log "INFO" "Archived $new_filename"
     else
-        log "ERROR" "Failed to archive $new_filename"
+        local mv_error=$?
+        log "ERROR" "Failed to archive $new_filename (exit code: $mv_error)"
+        log "ERROR" "Source: $new_filepath"
+        log "ERROR" "Destination: $archive_filepath"
+        log "ERROR" "Archive directory exists: $(test -d "$ARCHIVE_PATH" && echo "yes" || echo "no")"
+        log "ERROR" "Archive directory writable: $(test -w "$ARCHIVE_PATH" && echo "yes" || echo "no")"
         return 1
     fi
 
@@ -137,6 +143,15 @@ main() {
     log "INFO" "Log level: $LOG_LEVEL"
     log "INFO" "Watch pattern: $WATCH_PATTERN"
 
+    # Ensure archive directory exists
+    if [[ ! -d "$ARCHIVE_PATH" ]]; then
+        log "INFO" "Creating archive directory: $ARCHIVE_PATH"
+        if ! mkdir -p "$ARCHIVE_PATH"; then
+            log "ERROR" "Failed to create archive directory: $ARCHIVE_PATH"
+            exit 1
+        fi
+    fi
+
     check_dependencies
     validate_printer
 
@@ -151,8 +166,14 @@ main() {
     inotifywait -m -e close_write,moved_to \
         --format '%w%f' \
         --include "$WATCH_PATTERN" \
-        --exclude "$exclude_pattern" \
         "$MONITOR_DIR" | while read -r filepath; do
+
+        # Check if file should be excluded
+        local filename=$(basename "$filepath")
+        if [[ "$filename" =~ $exclude_pattern ]]; then
+            log "DEBUG" "Skipping excluded file: $filename"
+            continue
+        fi
 
         # Small delay to ensure file is completely written
         sleep 0.5
