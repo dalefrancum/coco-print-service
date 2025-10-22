@@ -68,6 +68,16 @@ process_file() {
         return 1
     fi
 
+    # Check if file has carriage returns and fix them
+    if grep -q $'\r' "$new_filepath"; then
+        log "INFO" "File contains carriage returns, converting to newlines..."
+        if sed -i 's/\r/\n/g' "$new_filepath"; then
+            log "INFO" "Successfully converted carriage returns to newlines in $new_filename"
+        else
+            log "WARN" "Failed to convert carriage returns in $new_filename, continuing anyway"
+        fi
+    fi
+
     # Print the file
     log "INFO" "Printing $new_filename to printer $PRINTER_NAME"
     if lp -d "$PRINTER_NAME" "$new_filepath" 2>&1 | while read -r line; do
