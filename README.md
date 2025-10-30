@@ -202,12 +202,6 @@ sudo rm /etc/coco-print-service.conf
 
 # Reload systemd
 sudo systemctl daemon-reload
-
-# Remove service user (optional)
-sudo userdel coco-print
-
-# Remove monitoring directory (optional)
-sudo rm -rf /cocoprints
 ```
 
 ## License
